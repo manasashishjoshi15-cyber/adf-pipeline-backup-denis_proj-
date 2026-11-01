@@ -1,0 +1,15 @@
+{
+	"name": "denisprojadf1",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "indiasouthcentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "93d79395-cbf4-4725-853c-bbeace80d728",
+		"tenantId": "8709b916-4bea-4cc2-abcf-5e4598d0c906"
+	}
+}

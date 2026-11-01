@@ -1,0 +1,11 @@
+{
+	"name": "adf2keyvault_ls",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://manaskeyvault.vault.azure.net/"
+		}
+	}
+}

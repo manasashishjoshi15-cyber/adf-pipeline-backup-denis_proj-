@@ -1,0 +1,284 @@
+{
+	"name": "Denis_df",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Category_S",
+						"type": "DatasetReference"
+					},
+					"name": "categorytable"
+				},
+				{
+					"dataset": {
+						"referenceName": "SubCategory_S",
+						"type": "DatasetReference"
+					},
+					"name": "subcategorytable"
+				},
+				{
+					"dataset": {
+						"referenceName": "Product_S",
+						"type": "DatasetReference"
+					},
+					"name": "producttable"
+				},
+				{
+					"dataset": {
+						"referenceName": "Factfiles_S",
+						"type": "DatasetReference"
+					},
+					"name": "salestable"
+				},
+				{
+					"dataset": {
+						"referenceName": "SalesRep_S",
+						"type": "DatasetReference"
+					},
+					"name": "salesreptable"
+				},
+				{
+					"dataset": {
+						"referenceName": "Geography_S",
+						"type": "DatasetReference"
+					},
+					"name": "geographytable"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Denis_G",
+						"type": "DatasetReference"
+					},
+					"name": "goldtable"
+				},
+				{
+					"dataset": {
+						"referenceName": "Denis_GTb",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "CategorySubcategoryjoin"
+				},
+				{
+					"name": "reftable"
+				},
+				{
+					"name": "refproductjoin"
+				},
+				{
+					"name": "ref4table"
+				},
+				{
+					"name": "salessalesrepjoin"
+				},
+				{
+					"name": "ref2table"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "ref5table"
+				},
+				{
+					"name": "derivedcolumns"
+				},
+				{
+					"name": "grossprofit"
+				},
+				{
+					"name": "ref2geogaphyjoin"
+				},
+				{
+					"name": "ref3table"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CategoryKey as short,",
+				"          Category as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> categorytable",
+				"source(output(",
+				"          SubCategoryKey as short,",
+				"          Categorykey as short,",
+				"          SubCategoryName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> subcategorytable",
+				"source(output(",
+				"          ProductID as short,",
+				"          ProductName as string,",
+				"          SubCategoryKey as short,",
+				"          Color as string,",
+				"          RetailPrice as double,",
+				"          StandardCost as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> producttable",
+				"source(output(",
+				"          fSalesPrimaryKey as integer,",
+				"          ProductID as short,",
+				"          SalesRepID as short,",
+				"          Date as date,",
+				"          Units as short,",
+				"          PercentOfStandardCost as double,",
+				"          RevenueDiscount as double,",
+				"          Country as string,",
+				"          Town as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> salestable",
+				"source(output(",
+				"          SalesRepID as short,",
+				"          SalaesRepFirstName as string,",
+				"          SalesRepLastName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> salesreptable",
+				"source(output(",
+				"          Country as string,",
+				"          Town as string,",
+				"          GeoKey as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> geographytable",
+				"categorytable, subcategorytable join(categorytable@CategoryKey == subcategorytable@Categorykey,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> CategorySubcategoryjoin",
+				"CategorySubcategoryjoin select(mapColumn(",
+				"          CategoryName = Category,",
+				"          SubCategoryKey,",
+				"          SubCategoryName",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> reftable",
+				"reftable, producttable join(reftable@SubCategoryKey == producttable@SubCategoryKey,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> refproductjoin",
+				"refproductjoin select(mapColumn(",
+				"          CategoryName,",
+				"          SubCategoryName,",
+				"          ProductID,",
+				"          ProductName,",
+				"          Color,",
+				"          RetailPrice,",
+				"          StandardCost",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ref4table",
+				"salestable, salesreptable join(salestable@SalesRepID == salesreptable@SalesRepID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> salessalesrepjoin",
+				"salessalesrepjoin select(mapColumn(",
+				"          TransactionID = fSalesPrimaryKey,",
+				"          ProductID,",
+				"          Date,",
+				"          Units,",
+				"          PercentOfStandardCost,",
+				"          RevenueDiscount,",
+				"          Country,",
+				"          Town,",
+				"          SalesRepID = salesreptable@SalesRepID,",
+				"          SalaesRepFirstName,",
+				"          SalesRepLastName",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ref2table",
+				"ref4table, ref3table join(ref4table@ProductID == ref3table@ProductID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          CategoryName,",
+				"          SubCategoryName,",
+				"          ProductID = ref4table@ProductID,",
+				"          ProductName,",
+				"          Color,",
+				"          RetailPrice,",
+				"          StandardCost,",
+				"          TransactionID,",
+				"          Date,",
+				"          Units,",
+				"          PercentOfStandardCost,",
+				"          RevenueDiscount,",
+				"          Country,",
+				"          Town,",
+				"          SalesRepID,",
+				"          SalaesRepFirstName,",
+				"          SalesRepLastName,",
+				"          GeoKey",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ref5table",
+				"ref5table derive(TotalRevenue = Units*RetailPrice,",
+				"          TotalCost = StandardCost*Units) ~> derivedcolumns",
+				"derivedcolumns derive(GrossProfit = TotalRevenue-TotalCost) ~> grossprofit",
+				"ref2table, geographytable join(ref2table@Country == geographytable@Country",
+				"     && ref2table@Town == geographytable@Town,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> ref2geogaphyjoin",
+				"ref2geogaphyjoin select(mapColumn(",
+				"          TransactionID,",
+				"          ProductID,",
+				"          Date,",
+				"          Units,",
+				"          PercentOfStandardCost,",
+				"          RevenueDiscount,",
+				"          Country = ref2table@Country,",
+				"          Town = ref2table@Town,",
+				"          SalesRepID,",
+				"          SalaesRepFirstName,",
+				"          SalesRepLastName,",
+				"          GeoKey",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ref3table",
+				"grossprofit sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     filePattern:'Denis_G.csv',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> goldtable",
+				"grossprofit sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"name": "SubCategory_S",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls2adf",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "SubCategory_S.csv",
+				"folderPath": "Silver",
+				"fileSystem": "denismedallion"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,16 @@
+{
+	"name": "Product_R",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "onpremsql2adf_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "`product`"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

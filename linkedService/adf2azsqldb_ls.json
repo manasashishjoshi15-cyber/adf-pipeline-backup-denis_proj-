@@ -1,0 +1,24 @@
+{
+	"name": "adf2azsqldb_ls",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "denisprojserver.database.windows.net",
+			"database": "denis_db",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "manas",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "adf2keyvault_ls",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "denisdbpassword"
+			}
+		}
+	}
+}

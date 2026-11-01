@@ -1,0 +1,72 @@
+{
+	"name": "Main_pl",
+	"properties": {
+		"activities": [
+			{
+				"name": "R2B",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Raw2Bronze_pl",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "B2S",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "R2B",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Bronze2Silver_pl",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "S2G",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "B2S",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Silver2gold_pl",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-10-27T10:32:09Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

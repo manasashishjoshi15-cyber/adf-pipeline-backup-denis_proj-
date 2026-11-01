@@ -1,0 +1,17 @@
+{
+	"name": "Denis_GTb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adf2azsqldb_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "",
+			"table": "Denis_tb"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

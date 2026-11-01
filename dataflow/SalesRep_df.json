@@ -1,0 +1,63 @@
+{
+	"name": "SalesRep_df",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SalesRep_B",
+						"type": "DatasetReference"
+					},
+					"name": "salesrepinput"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SalesRep_S",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          SalesRepID as string,",
+				"          {Sales Rep Name} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> salesrepinput",
+				"salesrepinput derive(SalesRepID = regexReplace(SalesRepID, '[^0-9]',''),",
+				"          SalaesRepFirstName = split({Sales Rep Name},\" \")[1],",
+				"          SalesRepLastName = split({Sales Rep Name},\" \")[2],",
+				"     partitionBy('hash', 1)) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          SalesRepID,",
+				"          SalesRepFirstName = SalaesRepFirstName,",
+				"          SalesRepLastName",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     filePattern:'SalesRep_S.csv',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

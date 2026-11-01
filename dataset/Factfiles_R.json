@@ -1,0 +1,57 @@
+{
+	"name": "Factfiles_R",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls2adf",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Sales",
+				"fileSystem": "denisrawfact"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "fSalesPrimaryKey",
+				"type": "String"
+			},
+			{
+				"name": "ProductID",
+				"type": "String"
+			},
+			{
+				"name": "SalesRepID",
+				"type": "String"
+			},
+			{
+				"name": "Location",
+				"type": "String"
+			},
+			{
+				"name": "Date",
+				"type": "String"
+			},
+			{
+				"name": "Units",
+				"type": "String"
+			},
+			{
+				"name": "PercentOfStandardCost",
+				"type": "String"
+			},
+			{
+				"name": "RevenueDiscount",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

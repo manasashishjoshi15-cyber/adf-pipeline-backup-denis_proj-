@@ -1,0 +1,21 @@
+{
+	"name": "Geography_B",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls2adf",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Geography.json",
+				"folderPath": "Bronze",
+				"fileSystem": "denismedallion"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
